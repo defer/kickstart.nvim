@@ -65,6 +65,15 @@ return {
       'nvim-neotest/neotest-go',
     },
     config = function()
+      local neotest_ns = vim.api.nvim_create_namespace 'neotest'
+      vim.diagnostic.config({
+        virtual_text = {
+          format = function(diagnostic)
+            local message = diagnostic.message:gsub('\n', ' '):gsub('\t', ' '):gsub('%s+', ' '):gsub('^%s+', '')
+            return message
+          end,
+        },
+      }, neotest_ns)
       require('neotest').setup {
         adapters = {
           require 'neotest-go',
@@ -128,6 +137,54 @@ return {
         end,
         desc = 'Stop',
       },
+      {
+        '<leader>tw',
+        function()
+          require('neotest').watch.watch(vim.fn.expand '%')
+        end,
+      },
     },
+  },
+  {
+    'stevearc/oil.nvim',
+    version = '*',
+    config = function()
+      require('oil').setup {
+        default_file_explorer = true,
+        columns = {
+          'icon',
+          'permissions',
+          'size',
+        },
+        keymaps = {
+          ['g?'] = 'actions.show_help',
+          ['<CR>'] = 'actions.select',
+          ['<C-s>'] = 'actions.select_vsplit',
+          ['<C-g>'] = 'actions.select_split',
+          ['<C-t>'] = 'actions.select_tab',
+          ['<C-p>'] = 'actions.preview',
+          ['<C-c>'] = 'actions.close',
+          ['<C-r>'] = 'actions.refresh',
+          ['-'] = 'actions.parent',
+          ['_'] = 'actions.open_cwd',
+          ['`'] = 'actions.cd',
+          ['~'] = 'actions.tcd',
+          ['gs'] = 'actions.change_sort',
+          ['gx'] = 'actions.open_external',
+          ['g.'] = 'actions.toggle_hidden',
+          ['g\\'] = 'actions.toggle_trash',
+        },
+        use_default_keymaps = false,
+        view_options = {
+          show_hidden = false,
+          natural_order = true,
+          sort = {
+            { 'type', 'asc' },
+            { 'name', 'asc' },
+            { 'size', 'desc' },
+          },
+        },
+      }
+    end,
   },
 }
