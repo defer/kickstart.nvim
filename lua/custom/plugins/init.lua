@@ -187,4 +187,8 @@ return {
       }
     end,
   },
+  {
+    'lewis6991/fileline.nvim',
+    version = '*',
+  },
 }
